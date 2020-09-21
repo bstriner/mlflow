@@ -29,8 +29,9 @@ STATIC_DIR = os.path.join(app.root_path, REL_STATIC_DIR)
 if os.getenv(CORS_ENV_VAR):
     from distutils.util import strtobool
     from flask_cors import CORS
-    
+        
     if strtobool(os.getenv(CORS_ENV_VAR)):
+        print("Enabling CORS")
         CORS(app)
 
 for http_path, handler, methods in handlers.get_endpoints():
