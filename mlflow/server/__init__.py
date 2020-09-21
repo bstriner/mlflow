@@ -19,12 +19,19 @@ from mlflow.utils.process import exec_cmd
 BACKEND_STORE_URI_ENV_VAR = "_MLFLOW_SERVER_FILE_STORE"
 ARTIFACT_ROOT_ENV_VAR = "_MLFLOW_SERVER_ARTIFACT_ROOT"
 PROMETHEUS_EXPORTER_ENV_VAR = "prometheus_multiproc_dir"
+CORS_ENV_VAR = "MLFLOW_SERVER_CORS"
 
 REL_STATIC_DIR = "js/build"
 
 app = Flask(__name__, static_folder=REL_STATIC_DIR)
 STATIC_DIR = os.path.join(app.root_path, REL_STATIC_DIR)
 
+if os.getenv(CORS_ENV_VAR):
+    from distutils.util import strtobool
+    from flask_cors import CORS
+    
+    if strtobool(os.getenv(CORS_ENV_VAR)):
+        CORS(app)
 
 for http_path, handler, methods in handlers.get_endpoints():
     app.add_url_rule(http_path, handler.__name__, handler, methods=methods)
